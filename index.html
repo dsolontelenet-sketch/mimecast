@@ -146,7 +146,7 @@
       Urgent Customer<br/>
       <span style="background:linear-gradient(90deg,#e84545,#ff7b7b); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Alert Guide</span>
     </h1>
-   
+ 
   </section>
 
   <!-- ═══════════ MAIN ═══════════ -->
@@ -338,18 +338,13 @@ Overview: Swati confirmed that the new config files now return the correct categ
   <script>
     function copyAlertText() {
       var text =
-        '【URGENT】\nHi Everyone,\n\n' +
-        'We would like to share an email from Swati regarding the Miscategorization Bug - ' +
-        'Fitness Sites Tagged as Illegal Activities in Netstar URL categorization. ' +
-        'Please see the details below.\n\n' +
-        'Email Title:\n' +
-        'Re: Miscategorization Bug - Fitness Sites Tagged as Illegal Activities in Netstar URL categorization\n\n' +
-        'From:\nsswati@mimecast.com\n\n' +
-        'Date:\n05/19/2026 5:50 PM\n\n' +
-        'Overview:\n' +
-        'Swati confirmed that the new config files now return the correct category, i.e. FITNESS, ' +
-        'for the fitness domains they shared. It appears the issue was caused by outdated category files. ' +
-        'They will also update all their servers.';
+        '【URGENT】\n' +
+        'Hi Everyone,\n\n' +
+        'We would like to share an email from Swati regarding the Miscategorization Bug - Fitness Sites Tagged as Illegal Activities in Netstar URL categorization. Please see the details below.\n\n' +
+        'Email Title: Re: Miscategorization Bug - Fitness Sites Tagged as Illegal Activities in Netstar URL categorization\n' +
+        'From: sswati@mimecast.com\n' +
+        'Date: 05/19/2026 5:50 PM\n' +
+        'Overview: Swati confirmed that the new config files now return the correct category, i.e. FITNESS, for the fitness domains they shared. It appears the issue was caused by outdated category files. They will also update all their servers.';
 
       navigator.clipboard.writeText(text).then(function () {
         var btn   = document.getElementById('copyBtn');
