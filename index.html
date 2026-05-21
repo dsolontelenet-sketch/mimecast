@@ -18,18 +18,6 @@
             body:    ['DM Sans', 'sans-serif'],
             mono:    ['JetBrains Mono', 'monospace'],
           },
-          colors: {
-            bg:     '#0a0b0f',
-            surface:'#111318',
-            card:   '#161921',
-            border: '#1e2230',
-            accent: '#e84545',
-            blue:   '#3d7fff',
-            muted:  '#5a6380',
-            dim:    '#8892a8',
-            light:  '#c8d0e0',
-            white:  '#edf0f8',
-          },
           keyframes: {
             rise: { from:{ opacity:'0', transform:'translateY(16px)' }, to:{ opacity:'1', transform:'none' } },
             glow: { '0%,100%':{ opacity:'1' }, '50%':{ opacity:'0.5' } },
@@ -50,7 +38,6 @@
     *, *::before, *::after { box-sizing: border-box; }
     body { font-family: 'DM Sans', sans-serif; background: #0a0b0f; color: #c8d0e0; }
 
-    /* Noise texture overlay */
     body::before {
       content: '';
       position: fixed; inset: 0;
@@ -58,52 +45,82 @@
       pointer-events: none; z-index: 0;
     }
 
-    /* Glow orbs */
     .orb-red  { background: radial-gradient(circle, rgba(232,69,69,.18) 0%, transparent 70%); }
     .orb-blue { background: radial-gradient(circle, rgba(61,127,255,.12) 0%, transparent 70%); }
 
-    /* Thick accent bar on section labels */
     .label-bar::before { content:''; display:inline-block; width:3px; height:12px; background:#e84545; border-radius:2px; margin-right:10px; vertical-align:middle; }
 
-    /* Step connector */
-    .step-line { position:relative; }
+    /* Step connector — now runs through the whole card including image */
+    .step-line { position: relative; }
     .step-line:not(:last-child)::before {
-      content:''; position:absolute; left:19px; top:42px; bottom:-14px;
-      width:1px; background: linear-gradient(to bottom, #3d7fff44, transparent);
+      content:''; position:absolute; left:19px; top:42px; bottom:-16px;
+      width:1px; background: linear-gradient(to bottom, #3d7fff55, transparent);
+      z-index: 1;
     }
 
-    /* Template box */
     #copyBody { user-select: all; }
 
-    /* Scrollbar */
     ::-webkit-scrollbar { width:5px; }
     ::-webkit-scrollbar-track { background:#111318; }
     ::-webkit-scrollbar-thumb { background:#1e2230; border-radius:3px; }
     ::-webkit-scrollbar-thumb:hover { background:#3d7fff55; }
 
-    /* Lightbox */
     #lightbox { backdrop-filter: blur(12px); }
 
-    /* Summary toggle */
     details summary { list-style: none; cursor: pointer; }
     details summary::-webkit-details-marker { display: none; }
     details[open] .chevron { transform: rotate(180deg); }
     .chevron { transition: transform .25s; }
+
+    /* Screenshot embed */
+    .step-screenshot {
+      margin-top: 12px;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #1e2230;
+      cursor: zoom-in;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .step-screenshot:hover {
+      border-color: #3d7fff66;
+      box-shadow: 0 8px 32px rgba(61,127,255,.12);
+    }
+    .step-screenshot img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.3s;
+    }
+    .step-screenshot:hover img { transform: scale(1.01); }
+
+    /* Step 4 screenshot hover uses red */
+    .step-screenshot-red:hover {
+      border-color: #e8454566 !important;
+      box-shadow: 0 8px 32px rgba(232,69,69,.12) !important;
+    }
+
+    .img-placeholder {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 6px;
+      height: 120px;
+      background: #111318;
+      color: #5a6380;
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+    }
   </style>
 </head>
 <body class="min-h-screen antialiased relative">
 
-  <!-- Background orbs -->
   <div class="orb-red  fixed -top-40 -left-40 w-[600px] h-[600px] pointer-events-none z-0"></div>
   <div class="orb-blue fixed top-1/2 -right-40 w-[500px] h-[500px] pointer-events-none z-0 -translate-y-1/2"></div>
 
-  <!-- ═══════════════════════════════════════
-       HEADER
-  ════════════════════════════════════════ -->
+  <!-- ═══════════ HEADER ═══════════ -->
   <header class="relative z-10 border-b border-[#1e2230] bg-[#0d0e14]/80 backdrop-blur-xl">
     <div class="max-w-4xl mx-auto px-6 py-5 flex items-center justify-between">
-
-      <!-- Logo area -->
       <div class="flex items-center gap-3">
         <div class="w-8 h-8 rounded-lg bg-[#e84545] flex items-center justify-center flex-shrink-0 shadow-lg shadow-red-900/40">
           <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 16 16">
@@ -111,12 +128,10 @@
           </svg>
         </div>
         <div>
-          <p class="font-display font-700 text-[#edf0f8] text-sm leading-none tracking-tight">Mimecast</p>
+          <p style="font-family:'Syne',sans-serif; font-weight:700;" class="text-[#edf0f8] text-sm leading-none tracking-tight">Mimecast</p>
           <p class="text-[10px] text-[#5a6380] font-mono uppercase tracking-widest mt-0.5">Internal Guide</p>
         </div>
       </div>
-
-      <!-- Badge -->
       <span class="hidden sm:inline-flex items-center gap-1.5 border border-[#e84545]/30 bg-[#e84545]/10 text-[#e84545] text-[10px] font-mono uppercase tracking-widest px-3 py-1.5 rounded-full">
         <span class="w-1.5 h-1.5 rounded-full bg-[#e84545] animate-glow"></span>
         Urgent Customer Alert
@@ -124,50 +139,61 @@
     </div>
   </header>
 
-
-  <!-- ═══════════════════════════════════════
-       HERO
-  ════════════════════════════════════════ -->
-  <section class="relative z-10 max-w-4xl mx-auto px-6 pt-16 pb-12 animate-rise">
-
+  <!-- ═══════════ HERO ═══════════ -->
+  <section class="relative z-10 max-w-4xl mx-auto px-6 pt-16 pb-10 animate-rise">
     <p class="label-bar text-[#e84545] font-mono text-xs uppercase tracking-widest mb-5">Process Reference</p>
-
-    <h1 class="font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl text-[#edf0f8] leading-[1.08] tracking-tight mb-5">
+    <h1 style="font-family:'Syne',sans-serif;" class="font-extrabold text-4xl sm:text-5xl lg:text-6xl text-[#edf0f8] leading-[1.08] tracking-tight mb-5">
       Urgent Customer<br/>
       <span style="background:linear-gradient(90deg,#e84545,#ff7b7b); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Alert Guide</span>
     </h1>
+    <p class="text-[#8892a8] text-base sm:text-lg max-w-2xl leading-relaxed mb-8">
+      How to report urgent customer issues directly via the <strong class="text-[#c8d0e0]">Urgent Customer Alert</strong> channel — quickly and correctly, every time.
+    </p>
 
-  
+    <!-- Summary accordion -->
+    <details class="bg-[#161921] border border-[#1e2230] rounded-2xl overflow-hidden" open>
+      <summary class="flex items-center justify-between px-6 py-4 hover:bg-[#1a1f2b] transition-colors">
+        <div class="flex items-center gap-3">
+          <svg class="w-4 h-4 text-[#3d7fff]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <span style="font-family:'Syne',sans-serif;" class="font-semibold text-[#edf0f8] text-sm">What This Guide Covers</span>
+        </div>
+        <svg class="chevron w-4 h-4 text-[#5a6380]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+      </summary>
+      <div class="px-6 pb-5 border-t border-[#1e2230]">
+        <ul class="mt-4 space-y-3">
+          <li class="flex items-start gap-3 text-sm text-[#8892a8]">
+            <span class="mt-0.5 w-5 h-5 rounded-md bg-[#3d7fff]/15 text-[#3d7fff] text-xs font-bold font-mono flex items-center justify-center flex-shrink-0">01</span>
+            A <strong class="text-[#c8d0e0]">copy-ready alert message</strong> to paste into the Urgent Customer Alert channel
+          </li>
+          <li class="flex items-start gap-3 text-sm text-[#8892a8]">
+            <span class="mt-0.5 w-5 h-5 rounded-md bg-[#3d7fff]/15 text-[#3d7fff] text-xs font-bold font-mono flex items-center justify-center flex-shrink-0">02</span>
+            How to <strong class="text-[#c8d0e0]">highlight 【URGENT】 in red</strong> inside the editor — with a screenshot for each step
+          </li>
+        </ul>
       </div>
     </details>
   </section>
 
-
-  <!-- ═══════════════════════════════════════
-       MAIN
-  ════════════════════════════════════════ -->
+  <!-- ═══════════ MAIN ═══════════ -->
   <main class="relative z-10 max-w-4xl mx-auto px-6 pb-20 space-y-10">
 
-
-    <!-- ─── ⚠ ALERT NOTICE ───────────────────────────── -->
+    <!-- ⚠ ALERT NOTICE -->
     <div class="animate-rise-1 flex gap-4 items-start bg-[#1a0d0d] border border-[#e84545]/30 rounded-2xl p-5">
-      <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-[#e84545] flex items-center justify-center font-display font-black text-white text-base shadow-lg shadow-red-900/50">!</div>
+      <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-[#e84545] flex items-center justify-center font-mono font-black text-white text-base shadow-lg shadow-red-900/50">!</div>
       <div>
-        <p class="font-display font-bold text-[#e84545] text-sm mb-1">Do NOT send a 1st response to Mimecast first</p>
+        <p style="font-family:'Syne',sans-serif;" class="font-bold text-[#e84545] text-sm mb-1">Do NOT send a 1st response to Mimecast first</p>
         <p class="text-[#8892a8] text-sm leading-relaxed">
           As soon as you identify an urgent issue, go straight to <strong class="text-[#c8d0e0]">"Urgent Customer Alert"</strong> and report it there. Skipping the first-response step means faster escalation and faster fixes for the customer.
         </p>
       </div>
     </div>
 
-
-    <!-- ─── STEP 1: COPY TEMPLATE ──────────────────────── -->
+    <!-- ─── STEP 1: COPY TEMPLATE ─── -->
     <section class="animate-rise-1">
       <p class="label-bar text-[#5a6380] font-mono text-xs uppercase tracking-widest mb-2">Step 01</p>
-      <h2 class="font-display font-bold text-2xl text-[#edf0f8] mb-5">Report to Urgent Customer Alert in Teams</h2>
+      <h2 style="font-family:'Syne',sans-serif;" class="font-bold text-2xl text-[#edf0f8] mb-5">Report to Urgent Customer Alert in Teams</h2>
 
       <div class="bg-[#161921] border border-[#1e2230] rounded-2xl overflow-hidden shadow-xl shadow-black/30">
-
         <!-- toolbar -->
         <div class="flex items-center justify-between px-5 py-3 border-b border-[#1e2230] bg-[#111318]">
           <div class="flex items-center gap-2">
@@ -176,11 +202,8 @@
             <span class="w-2.5 h-2.5 rounded-full bg-green-500/40"></span>
             <span class="ml-3 font-mono text-[11px] text-[#5a6380] uppercase tracking-widest">alert-template.txt</span>
           </div>
-          <button
-            id="copyBtn"
-            onclick="copyAlertText()"
-            class="inline-flex items-center gap-2 bg-[#e84545] hover:bg-[#c93838] active:scale-95 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-all duration-200 shadow shadow-red-900/40"
-          >
+          <button id="copyBtn" onclick="copyAlertText()"
+            class="inline-flex items-center gap-2 bg-[#e84545] hover:bg-[#c93838] active:scale-95 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-all duration-200 shadow shadow-red-900/40">
             <svg id="copyIcon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
               <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
             </svg>
@@ -190,7 +213,7 @@
 
         <!-- Message body -->
         <div id="copyBody" class="px-6 py-6 text-sm font-mono text-[#8892a8] leading-7 whitespace-pre-wrap">
-<span class="inline-block bg-[#e84545] text-white font-display font-bold px-3 py-0.5 rounded text-sm tracking-wider">【URGENT】</span>
+<span class="inline-block bg-[#e84545] text-white font-bold px-3 py-0.5 rounded text-sm tracking-wider">【URGENT】</span>
 <span class="text-[#c8d0e0]">Hi Everyone,</span>
 
 <span class="text-[#8892a8]">We would like to share an email from Swati regarding the Miscategorization Bug - Fitness Sites Tagged as Illegal Activities in Netstar URL categorization. Please see the details below.</span>
@@ -208,7 +231,6 @@
 <span class="text-[#c8d0e0]">Swati confirmed that the new config files now return the correct category, i.e. FITNESS, for the fitness domains they shared. It appears the issue was caused by outdated category files. They will also update all their servers.</span>
         </div>
 
-        <!-- Toast -->
         <div id="copyToast" class="hidden border-t border-green-800/40 bg-green-900/20 text-green-400 text-xs font-mono font-semibold text-center py-3 tracking-wide">
           ✓ Copied to clipboard — paste it into Urgent Customer Alert now
         </div>
@@ -220,11 +242,10 @@
       </p>
     </section>
 
-
-    <!-- ─── STEP 2: HIGHLIGHT ──────────────────────────── -->
+    <!-- ─── STEP 2: HIGHLIGHT STEPS WITH INLINE IMAGES ─── -->
     <section class="animate-rise-2">
       <p class="label-bar text-[#5a6380] font-mono text-xs uppercase tracking-widest mb-2">Step 02</p>
-      <h2 class="font-display font-bold text-2xl text-[#edf0f8] mb-5">Highlight 【URGENT】 in Red</h2>
+      <h2 style="font-family:'Syne',sans-serif;" class="font-bold text-2xl text-[#edf0f8] mb-5">Highlight 【URGENT】 in Red</h2>
 
       <div class="bg-[#161921] border border-[#1e2230] rounded-2xl p-6 shadow-xl shadow-black/30">
         <p class="text-sm text-[#8892a8] mb-7 leading-relaxed">
@@ -233,37 +254,93 @@
           instantly visible.
         </p>
 
-        <ol class="space-y-3">
+        <ol class="space-y-6">
 
+          <!-- SUB-STEP 1 -->
           <li class="step-line flex gap-4 items-start">
-            <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-[#111318] border border-[#1e2230] text-[#3d7fff] font-display font-bold flex items-center justify-center text-sm z-10 shadow">01</div>
-            <div class="flex-1 bg-[#111318] border border-[#1e2230] rounded-xl p-4 hover:border-[#3d7fff]/40 transition-colors">
-              <p class="font-display font-semibold text-[#edf0f8] text-sm mb-1">Open the text editor</p>
-              <p class="text-[#8892a8] text-sm">Click the <strong class="text-[#c8d0e0]">pencil ✏️ icon</strong> at the bottom-right corner of the editor to enter edit mode.</p>
+            <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-[#111318] border border-[#1e2230] text-[#3d7fff] font-mono font-bold flex items-center justify-center text-sm z-10 shadow">01</div>
+            <div class="flex-1 min-w-0">
+              <div class="bg-[#111318] border border-[#1e2230] rounded-xl p-4 hover:border-[#3d7fff]/40 transition-colors">
+                <p style="font-family:'Syne',sans-serif;" class="font-semibold text-[#edf0f8] text-sm mb-1">Open the text editor</p>
+                <p class="text-[#8892a8] text-sm">Click the <strong class="text-[#c8d0e0]">pencil ✏️ icon</strong> at the bottom-right corner of the editor to enter edit mode.</p>
+              </div>
+              <!-- Screenshot 1 -->
+              <div class="step-screenshot mt-3" onclick="openLightbox(0)">
+                <img src="1.png"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
+                  alt="Step 1 — Pencil icon" />
+                <div class="img-placeholder">
+                  <svg class="w-7 h-7 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2" stroke-width="1.5"/><path d="M3 9l4-4 4 4 5-5 5 5" stroke-width="1.5"/></svg>
+                  1.png not found
+                </div>
+              </div>
+              <p class="text-[10px] text-[#5a6380] font-mono mt-1.5 ml-1">↑ Click to expand</p>
             </div>
           </li>
 
+          <!-- SUB-STEP 2 -->
           <li class="step-line flex gap-4 items-start">
-            <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-[#111318] border border-[#1e2230] text-[#3d7fff] font-display font-bold flex items-center justify-center text-sm z-10 shadow">02</div>
-            <div class="flex-1 bg-[#111318] border border-[#1e2230] rounded-xl p-4 hover:border-[#3d7fff]/40 transition-colors">
-              <p class="font-display font-semibold text-[#edf0f8] text-sm mb-1">Select the 【URGENT】 text</p>
-              <p class="text-[#8892a8] text-sm">Click and drag to highlight only the <span class="bg-[#e84545] text-white font-bold font-mono px-1.5 py-0.5 rounded text-xs mx-0.5">【URGENT】</span> tag at the very start of the message.</p>
+            <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-[#111318] border border-[#1e2230] text-[#3d7fff] font-mono font-bold flex items-center justify-center text-sm z-10 shadow">02</div>
+            <div class="flex-1 min-w-0">
+              <div class="bg-[#111318] border border-[#1e2230] rounded-xl p-4 hover:border-[#3d7fff]/40 transition-colors">
+                <p style="font-family:'Syne',sans-serif;" class="font-semibold text-[#edf0f8] text-sm mb-1">Select the 【URGENT】 text</p>
+                <p class="text-[#8892a8] text-sm">Click and drag to highlight only the <span class="bg-[#e84545] text-white font-bold font-mono px-1.5 py-0.5 rounded text-xs mx-0.5">【URGENT】</span> tag at the very start of the message.</p>
+              </div>
+              <!-- Screenshot 2 -->
+              <div class="step-screenshot mt-3" onclick="openLightbox(1)">
+                <img src="2.png"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
+                  alt="Step 2 — Select URGENT" />
+                <div class="img-placeholder">
+                  <svg class="w-7 h-7 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2" stroke-width="1.5"/><path d="M3 9l4-4 4 4 5-5 5 5" stroke-width="1.5"/></svg>
+                  2.png not found
+                </div>
+              </div>
+              <p class="text-[10px] text-[#5a6380] font-mono mt-1.5 ml-1">↑ Click to expand</p>
             </div>
           </li>
 
+          <!-- SUB-STEP 3 -->
           <li class="step-line flex gap-4 items-start">
-            <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-[#111318] border border-[#1e2230] text-[#3d7fff] font-display font-bold flex items-center justify-center text-sm z-10 shadow">03</div>
-            <div class="flex-1 bg-[#111318] border border-[#1e2230] rounded-xl p-4 hover:border-[#3d7fff]/40 transition-colors">
-              <p class="font-display font-semibold text-[#edf0f8] text-sm mb-1">Click the Highlight icon</p>
-              <p class="text-[#8892a8] text-sm">In the formatting toolbar, find the <strong class="text-[#c8d0e0]">Highlight / Background Colour</strong> icon (marker or paint bucket).</p>
+            <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-[#111318] border border-[#1e2230] text-[#3d7fff] font-mono font-bold flex items-center justify-center text-sm z-10 shadow">03</div>
+            <div class="flex-1 min-w-0">
+              <div class="bg-[#111318] border border-[#1e2230] rounded-xl p-4 hover:border-[#3d7fff]/40 transition-colors">
+                <p style="font-family:'Syne',sans-serif;" class="font-semibold text-[#edf0f8] text-sm mb-1">Click the Highlight icon</p>
+                <p class="text-[#8892a8] text-sm">In the formatting toolbar, find the <strong class="text-[#c8d0e0]">Highlight / Background Colour</strong> icon (marker or paint bucket).</p>
+              </div>
+              <!-- Screenshot 3 -->
+              <div class="step-screenshot mt-3" onclick="openLightbox(2)">
+                <img src="3.png"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
+                  alt="Step 3 — Highlight icon" />
+                <div class="img-placeholder">
+                  <svg class="w-7 h-7 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2" stroke-width="1.5"/><path d="M3 9l4-4 4 4 5-5 5 5" stroke-width="1.5"/></svg>
+                  3.png not found
+                </div>
+              </div>
+              <p class="text-[10px] text-[#5a6380] font-mono mt-1.5 ml-1">↑ Click to expand</p>
             </div>
           </li>
 
+          <!-- SUB-STEP 4 -->
           <li class="flex gap-4 items-start">
-            <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-[#e84545] text-white font-display font-bold flex items-center justify-center text-sm z-10 shadow shadow-red-900/50">04</div>
-            <div class="flex-1 bg-[#1a0d0d] border border-[#e84545]/30 rounded-xl p-4 hover:border-[#e84545]/60 transition-colors">
-              <p class="font-display font-semibold text-[#e84545] text-sm mb-1">Choose Red from the colour palette</p>
-              <p class="text-[#8892a8] text-sm">Select <strong class="text-[#e84545]">Red</strong> from the picker. The 【URGENT】 tag will immediately get a red background — making it instantly noticeable.</p>
+            <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-[#e84545] text-white font-mono font-bold flex items-center justify-center text-sm z-10 shadow shadow-red-900/50">04</div>
+            <div class="flex-1 min-w-0">
+              <div class="bg-[#1a0d0d] border border-[#e84545]/30 rounded-xl p-4 hover:border-[#e84545]/60 transition-colors">
+                <p style="font-family:'Syne',sans-serif;" class="font-semibold text-[#e84545] text-sm mb-1">Choose Red from the colour palette</p>
+                <p class="text-[#8892a8] text-sm">Select <strong class="text-[#e84545]">Red</strong> from the picker. The 【URGENT】 tag will immediately get a red background — making it instantly noticeable.</p>
+              </div>
+              <!-- Screenshot 4 -->
+              <div class="step-screenshot step-screenshot-red mt-3" onclick="openLightbox(3)">
+                <img src="4.png"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
+                  alt="Step 4 — Choose Red" />
+                <div class="img-placeholder">
+                  <svg class="w-7 h-7 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2" stroke-width="1.5"/><path d="M3 9l4-4 4 4 5-5 5 5" stroke-width="1.5"/></svg>
+                  4.png not found
+                </div>
+              </div>
+              <p class="text-[10px] text-[#5a6380] font-mono mt-1.5 ml-1">↑ Click to expand</p>
             </div>
           </li>
 
@@ -271,97 +348,48 @@
       </div>
     </section>
 
-
-    <!-- ─── SCREENSHOTS ────────────────────────────────── -->
+    <!-- ─── QUICK CHECKLIST ─── -->
     <section class="animate-rise-3">
-      <p class="label-bar text-[#5a6380] font-mono text-xs uppercase tracking-widest mb-2">Visual Reference</p>
-      <h2 class="font-display font-bold text-2xl text-[#edf0f8] mb-5">Screenshots</h2>
-
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-
-        <!-- Cards -->
-        <div onclick="openLightbox(0)" class="group bg-[#161921] border border-[#1e2230] rounded-2xl overflow-hidden cursor-pointer hover:border-[#3d7fff]/50 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-900/20 transition-all duration-200">
-          <div class="relative h-32 bg-[#111318] overflow-hidden">
-            <img src="1.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" alt="Step 1" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-            <div class="hidden absolute inset-0 items-center justify-center bg-[#111318] text-[#5a6380] text-xs text-center p-2 flex-col gap-1">
-              <svg class="w-8 h-8 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2" stroke-width="1.5"/><path d="M3 9l4-4 4 4 5-5 5 5" stroke-width="1.5"/></svg>
-              1.png not found
-            </div>
-            <div class="absolute inset-0 bg-[#3d7fff]/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-              <svg class="w-6 h-6 text-white drop-shadow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/></svg>
-            </div>
+      <div class="bg-[#161921] border border-[#1e2230] rounded-2xl p-6 shadow-xl shadow-black/30">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-8 h-8 rounded-lg bg-green-900/40 border border-green-800/50 flex items-center justify-center flex-shrink-0">
+            <svg class="w-4 h-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
-          <div class="p-3">
-            <span class="font-mono text-[10px] text-[#3d7fff] uppercase tracking-widest">Step 01</span>
-            <p class="text-xs text-[#8892a8] mt-0.5 font-medium leading-snug">Pencil icon — enter edit mode</p>
-          </div>
+          <h3 style="font-family:'Syne',sans-serif;" class="font-bold text-[#edf0f8] text-base">Quick Checklist</h3>
         </div>
-
-        <div onclick="openLightbox(1)" class="group bg-[#161921] border border-[#1e2230] rounded-2xl overflow-hidden cursor-pointer hover:border-[#3d7fff]/50 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-900/20 transition-all duration-200">
-          <div class="relative h-32 bg-[#111318] overflow-hidden">
-            <img src="2.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" alt="Step 2" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-            <div class="hidden absolute inset-0 items-center justify-center bg-[#111318] text-[#5a6380] text-xs text-center p-2 flex-col gap-1">
-              <svg class="w-8 h-8 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2" stroke-width="1.5"/><path d="M3 9l4-4 4 4 5-5 5 5" stroke-width="1.5"/></svg>
-              2.jpg not found
-            </div>
-            <div class="absolute inset-0 bg-[#3d7fff]/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-              <svg class="w-6 h-6 text-white drop-shadow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/></svg>
-            </div>
-          </div>
-          <div class="p-3">
-            <span class="font-mono text-[10px] text-[#3d7fff] uppercase tracking-widest">Step 02</span>
-            <p class="text-xs text-[#8892a8] mt-0.5 font-medium leading-snug">Select the 【URGENT】 text</p>
-          </div>
-        </div>
-
-        <div onclick="openLightbox(2)" class="group bg-[#161921] border border-[#1e2230] rounded-2xl overflow-hidden cursor-pointer hover:border-[#3d7fff]/50 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-900/20 transition-all duration-200">
-          <div class="relative h-32 bg-[#111318] overflow-hidden">
-            <img src="3.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" alt="Step 3" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-            <div class="hidden absolute inset-0 items-center justify-center bg-[#111318] text-[#5a6380] text-xs text-center p-2 flex-col gap-1">
-              <svg class="w-8 h-8 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2" stroke-width="1.5"/><path d="M3 9l4-4 4 4 5-5 5 5" stroke-width="1.5"/></svg>
-              3.jpg not found
-            </div>
-            <div class="absolute inset-0 bg-[#3d7fff]/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-              <svg class="w-6 h-6 text-white drop-shadow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/></svg>
-            </div>
-          </div>
-          <div class="p-3">
-            <span class="font-mono text-[10px] text-[#3d7fff] uppercase tracking-widest">Step 03</span>
-            <p class="text-xs text-[#8892a8] mt-0.5 font-medium leading-snug">Click Highlight in toolbar</p>
-          </div>
-        </div>
-
-        <div onclick="openLightbox(3)" class="group bg-[#161921] border border-[#1e2230] rounded-2xl overflow-hidden cursor-pointer hover:border-[#e84545]/50 hover:-translate-y-1 hover:shadow-xl hover:shadow-red-900/20 transition-all duration-200">
-          <div class="relative h-32 bg-[#111318] overflow-hidden">
-            <img src="4.jpg" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" alt="Step 4" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-            <div class="hidden absolute inset-0 items-center justify-center bg-[#111318] text-[#5a6380] text-xs text-center p-2 flex-col gap-1">
-              <svg class="w-8 h-8 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2" stroke-width="1.5"/><path d="M3 9l4-4 4 4 5-5 5 5" stroke-width="1.5"/></svg>
-              4.jpg not found
-            </div>
-            <div class="absolute inset-0 bg-[#e84545]/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-              <svg class="w-6 h-6 text-white drop-shadow" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/></svg>
-            </div>
-          </div>
-          <div class="p-3">
-            <span class="font-mono text-[10px] text-[#e84545] uppercase tracking-widest">Step 04</span>
-            <p class="text-xs text-[#8892a8] mt-0.5 font-medium leading-snug">Choose Red from colour palette</p>
-          </div>
-        </div>
-
+        <ul class="space-y-3">
+          <li class="flex gap-3 items-center text-sm">
+            <span class="w-5 h-5 rounded border border-green-800/50 bg-green-900/20 flex items-center justify-center flex-shrink-0">
+              <svg class="w-3 h-3 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <span class="text-[#8892a8]">Identified an urgent customer issue</span>
+          </li>
+          <li class="flex gap-3 items-center text-sm">
+            <span class="w-5 h-5 rounded border border-green-800/50 bg-green-900/20 flex items-center justify-center flex-shrink-0">
+              <svg class="w-3 h-3 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <span class="text-[#8892a8]">Skipped 1st response — went straight to <strong class="text-[#c8d0e0]">Urgent Customer Alert</strong></span>
+          </li>
+          <li class="flex gap-3 items-center text-sm">
+            <span class="w-5 h-5 rounded border border-green-800/50 bg-green-900/20 flex items-center justify-center flex-shrink-0">
+              <svg class="w-3 h-3 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <span class="text-[#8892a8]">Copied & pasted the alert template</span>
+          </li>
+          <li class="flex gap-3 items-center text-sm">
+            <span class="w-5 h-5 rounded border border-green-800/50 bg-green-900/20 flex items-center justify-center flex-shrink-0">
+              <svg class="w-3 h-3 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <span class="text-[#8892a8]">Highlighted <span class="bg-[#e84545] text-white font-bold font-mono px-1.5 py-0.5 rounded text-xs mx-1">【URGENT】</span> in red using the toolbar</span>
+          </li>
+        </ul>
       </div>
-      <p class="text-[10px] text-[#5a6380] font-mono mt-3 text-center">Click any screenshot to expand</p>
     </section>
-
-
-  
 
   </main>
 
-
-  <!-- ═══════════════════════════════════════
-       LIGHTBOX
-  ════════════════════════════════════════ -->
-  <div id="lightbox" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80" onclick="closeLightboxOnBg(event)">
+  <!-- ═══════════ LIGHTBOX ═══════════ -->
+  <div id="lightbox" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/85" onclick="closeLightboxOnBg(event)">
     <div id="lightboxInner" class="relative max-w-[92vw] max-h-[92vh]">
       <button onclick="closeLightbox()" class="absolute -top-3 -right-3 w-8 h-8 bg-[#1e2230] hover:bg-[#e84545] text-[#c8d0e0] hover:text-white rounded-full flex items-center justify-center font-bold shadow-xl transition-colors z-10 text-sm">✕</button>
       <img id="lightboxImg" src="" alt="" class="max-w-full max-h-[82vh] rounded-2xl shadow-2xl shadow-black object-contain border border-[#1e2230]" />
@@ -369,17 +397,13 @@
     </div>
   </div>
 
-
-  <!-- ═══════════════════════════════════════
-       FOOTER
-  ════════════════════════════════════════ -->
+  <!-- ═══════════ FOOTER ═══════════ -->
   <footer class="relative z-10 border-t border-[#1e2230] bg-[#0d0e14] text-center py-6 px-4">
     <p class="font-mono text-[11px] text-[#5a6380] uppercase tracking-widest">
       <span class="text-[#c8d0e0]">Mimecast · Urgent Customer Alert Guide</span>
       &nbsp;·&nbsp; Internal Use Only &nbsp;·&nbsp; Follow the process exactly as described
     </p>
   </footer>
-
 
   <script>
     function copyAlertText() {
@@ -401,26 +425,22 @@
         var btn   = document.getElementById('copyBtn');
         var label = document.getElementById('copyLabel');
         var toast = document.getElementById('copyToast');
-
-        btn.classList.replace('bg-[#e84545]', 'bg-green-700');
-        btn.classList.replace('hover:bg-[#c93838]', 'hover:bg-green-800');
+        btn.style.background = '#15803d';
         label.textContent = 'Copied!';
         toast.classList.remove('hidden');
-
         setTimeout(function () {
           label.textContent = 'Copy Text';
           toast.classList.add('hidden');
-          btn.classList.replace('bg-green-700', 'bg-[#e84545]');
-          btn.classList.replace('hover:bg-green-800', 'hover:bg-[#c93838]');
+          btn.style.background = '';
         }, 3000);
       });
     }
 
     var images = [
-      { src: '1.jpg', cap: 'Step 01 — Pencil icon at the bottom-right of the editor' },
-      { src: '2.jpg', cap: 'Step 02 — Select the 【URGENT】 text' },
-      { src: '3.jpg', cap: 'Step 03 — Highlight icon in the formatting toolbar' },
-      { src: '4.jpg', cap: 'Step 04 — Choose Red from the colour palette' },
+      { src: '1.png', cap: 'Step 01 — Pencil icon at the bottom-right of the editor' },
+      { src: '2.png', cap: 'Step 02 — Select the 【URGENT】 text' },
+      { src: '3.png', cap: 'Step 03 — Highlight icon in the formatting toolbar' },
+      { src: '4.png', cap: 'Step 04 — Choose Red from the colour palette' },
     ];
 
     function openLightbox(i) {
