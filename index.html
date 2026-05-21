@@ -9,10 +9,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
 
   <script>
     tailwind.config = {
@@ -55,7 +51,6 @@
 
     .label-bar::before { content:''; display:inline-block; width:3px; height:12px; background:#e84545; border-radius:2px; margin-right:10px; vertical-align:middle; }
 
-    /* Step connector — now runs through the whole card including image */
     .step-line { position: relative; }
     .step-line:not(:last-child)::before {
       content:''; position:absolute; left:19px; top:42px; bottom:-16px;
@@ -77,7 +72,6 @@
     details[open] .chevron { transform: rotate(180deg); }
     .chevron { transition: transform .25s; }
 
-    /* Screenshot embed */
     .step-screenshot {
       margin-top: 12px;
       border-radius: 12px;
@@ -98,7 +92,6 @@
     }
     .step-screenshot:hover img { transform: scale(1.01); }
 
-    /* Step 4 screenshot hover uses red */
     .step-screenshot-red:hover {
       border-color: #e8454566 !important;
       box-shadow: 0 8px 32px rgba(232,69,69,.12) !important;
@@ -116,6 +109,35 @@
       font-size: 11px;
       font-family: 'JetBrains Mono', monospace;
     }
+
+    /* Special Measures Note */
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(232,69,69,0.15), 0 8px 40px rgba(0,0,0,0.4); }
+      50%       { box-shadow: 0 0 0 6px rgba(232,69,69,0.05), 0 8px 40px rgba(0,0,0,0.4); }
+    }
+    .special-note-card {
+      animation: pulseGlow 3s ease-in-out infinite;
+    }
+    .rule-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .rule-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .rule-bullet {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      margin-top: 1px;
+    }
   </style>
 </head>
 <body class="min-h-screen antialiased relative">
@@ -126,11 +148,7 @@
 <!-- ═══════════ HEADER ═══════════ -->
 <header class="relative z-10 border-b border-[#1e2230] bg-[#0d0e14]/80 backdrop-blur-xl">
   <div class="max-w-4xl mx-auto px-6 py-5 flex items-center justify-between">
-
-    <!-- Left: Back Arrow + Divider + Logo -->
     <div class="flex items-center gap-4">
-
-      <!-- Back Arrow -->
       <a href="https://inquiry-ns.vercel.app/"
          class="inline-flex items-center gap-2 text-[#c8d0e0] hover:text-white transition-colors duration-200 group font-mono text-xs uppercase tracking-widest">
         <svg class="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
@@ -138,10 +156,7 @@
         </svg>
         Go back to Inquiry Notes
       </a>
-
       <div class="w-px h-5 bg-[#2a2f3f]"></div>
-
-      <!-- Logo -->
       <div class="flex items-center gap-3">
         <div class="w-8 h-8 rounded-lg bg-[#e84545] flex items-center justify-center flex-shrink-0 shadow-lg shadow-red-900/40">
           <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 16 16">
@@ -154,8 +169,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Right: Badge -->
     <span class="hidden sm:inline-flex items-center gap-1.5 border border-[#e84545]/30 bg-[#e84545]/10 text-[#e84545] text-[10px] font-mono uppercase tracking-widest px-3 py-1.5 rounded-full">
       <span class="w-1.5 h-1.5 rounded-full bg-[#e84545] animate-glow"></span>
       Urgent Customer Alert
@@ -170,11 +183,114 @@
       Urgent Customer<br/>
       <span style="background:linear-gradient(90deg,#e84545,#ff7b7b); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Alert Guide</span>
     </h1>
- 
   </section>
 
   <!-- ═══════════ MAIN ═══════════ -->
   <main class="relative z-10 max-w-4xl mx-auto px-6 pb-20 space-y-10">
+
+    <!-- ★★★ SPECIAL MEASURES NOTE ★★★ -->
+    <div class="special-note-card animate-rise relative rounded-2xl overflow-hidden" style="background:#ffffff;">
+
+      <!-- Top accent bar -->
+      <div style="height:6px; background:linear-gradient(90deg,#e84545,#ff7b7b,#e84545); background-size:200% 100%; animation:shimmer 2.5s linear infinite;"></div>
+
+      <style>
+        @keyframes shimmer {
+          0%   { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
+      </style>
+
+      <div class="p-6 sm:p-8">
+
+        <!-- Header row -->
+        <div class="flex flex-wrap items-center gap-3 mb-5">
+          <!-- Icon -->
+          <div style="background:#e84545; border-radius:12px; width:44px; height:44px; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 4px 16px rgba(232,69,69,0.35);">
+            <svg style="width:22px;height:22px;color:#fff;" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
+            </svg>
+          </div>
+          <!-- Title -->
+          <div>
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+              <span style="font-family:'Syne',sans-serif; font-size:18px; font-weight:800; color:#111827; letter-spacing:-0.3px;">Special Support Measures</span>
+              <span style="background:#e84545; color:#fff; font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; padding:3px 10px; border-radius:999px; letter-spacing:0.08em; text-transform:uppercase;">【Mimecast】</span>
+            </div>
+            <p style="font-size:12px; color:#6b7280; font-family:'JetBrains Mono',monospace; margin-top:3px; text-transform:uppercase; letter-spacing:0.06em;">Active until concerns &amp; complaints are fully resolved</p>
+          </div>
+        </div>
+
+        <!-- First Response Template Box -->
+        <div style="background:#fff7f7; border:2px solid #fca5a5; border-radius:14px; padding:18px 20px; margin-bottom:20px;">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+            <span style="background:#e84545; color:#fff; font-size:10px; font-weight:800; font-family:'JetBrains Mono',monospace; padding:3px 10px; border-radius:6px; text-transform:uppercase; letter-spacing:0.08em;">First Response Template</span>
+            <span style="font-size:12px; color:#dc2626; font-family:'DM Sans',sans-serif; font-weight:600;">· Send for every NEW case (Urgent &amp; Normal)</span>
+          </div>
+          <div style="border-top:1px dashed #fca5a5; padding-top:12px;">
+            <p style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#374151; line-height:1.85; white-space:pre-wrap;">We would like to acknowledge that we have received your request.
+Our team is currently reviewing the details of your concern and will continue the investigation accordingly.
+We understand the importance of this matter and will provide updates as soon as possible.
+Thank you for your patience and understanding.</p>
+          </div>
+        </div>
+
+        <!-- Rules list -->
+        <div style="border:1.5px solid #e5e7eb; border-radius:14px; overflow:hidden;">
+
+          <!-- Rule 1 -->
+          <div class="rule-row" style="padding:13px 18px; background:#f9fafb;">
+            <div class="rule-bullet" style="background:#dbeafe; color:#1d4ed8;">
+              <svg style="width:12px;height:12px;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd"/></svg>
+            </div>
+            <p style="font-size:13.5px; color:#111827; font-family:'DM Sans',sans-serif; line-height:1.6;">
+              If the email title has <strong style="color:#1d4ed8; background:#dbeafe; padding:1px 6px; border-radius:4px; font-family:'JetBrains Mono',monospace; font-size:12px;">"Re"</strong> or it is a reply from Mimecast on the same case — <strong style="color:#111827;">do NOT send a first response.</strong>
+            </p>
+          </div>
+
+          <!-- Rule 2 -->
+          <div class="rule-row" style="padding:13px 18px; background:#ffffff;">
+            <div class="rule-bullet" style="background:#fef9c3; color:#b45309;">
+              <svg style="width:12px;height:12px;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/></svg>
+            </div>
+            <p style="font-size:13.5px; color:#111827; font-family:'DM Sans',sans-serif; line-height:1.6;">
+              If the email title has <strong style="color:#b45309; background:#fef9c3; padding:1px 6px; border-radius:4px; font-family:'JetBrains Mono',monospace; font-size:12px;">"Re"</strong> or it is a reply from Mimecast on the same case — report to <strong style="color:#b45309;">Urgent Customer Alert directly</strong> (skip first response entirely).
+            </p>
+          </div>
+
+          <!-- Rule 3 -->
+          <div class="rule-row" style="padding:13px 18px; background:#f9fafb;">
+            <div class="rule-bullet" style="background:#fee2e2; color:#dc2626;">
+              <svg style="width:12px;height:12px;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 1a9 9 0 100 18A9 9 0 0010 1zm.75 4.75a.75.75 0 00-1.5 0v4.5a.75.75 0 001.5 0v-4.5zm-.75 7.5a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd"/></svg>
+            </div>
+            <p style="font-size:13.5px; color:#111827; font-family:'DM Sans',sans-serif; line-height:1.6;">
+              <strong style="color:#dc2626;">ALL emails from Mimecast</strong> must be treated as <strong style="color:#dc2626;">Urgent</strong> — not only those with "Urgent" in the title, addressed to <span style="font-family:'JetBrains Mono',monospace; font-size:11.5px; background:#fee2e2; color:#dc2626; padding:1px 5px; border-radius:4px;">incompass_urgent@</span>, or with "Urgent" in the body content.
+            </p>
+          </div>
+
+          <!-- Rule 4 -->
+          <div class="rule-row" style="padding:13px 18px; background:#ffffff;">
+            <div class="rule-bullet" style="background:#e84545; color:#fff;">
+              <svg style="width:12px;height:12px;" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+            </div>
+            <p style="font-size:13.5px; color:#111827; font-family:'DM Sans',sans-serif; line-height:1.6;">
+              For <strong style="color:#111827;">all emails from Mimecast</strong>, always put <span style="background:#e84545; color:#fff; font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700; padding:2px 8px; border-radius:5px; letter-spacing:0.04em;">【URGENT】</span> at the <strong style="color:#e84545;">very beginning</strong> of every report.
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Bottom notice strip -->
+        <div style="margin-top:16px; background:#fff7ed; border:1.5px solid #fed7aa; border-radius:10px; padding:10px 16px; display:flex; align-items:center; gap:10px;">
+          <svg style="width:16px;height:16px;color:#ea580c;flex-shrink:0;" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clip-rule="evenodd"/></svg>
+          <p style="font-size:12px; color:#9a3412; font-family:'DM Sans',sans-serif; line-height:1.5;">
+            <strong>These are special support measures for Mimecast</strong> and remain in effect until all concerns and complaints are fully resolved.
+          </p>
+        </div>
+
+      </div>
+    </div>
+    <!-- ★★★ END SPECIAL MEASURES NOTE ★★★ -->
 
     <!-- ⚠ ALERT NOTICE -->
     <div class="animate-rise-1 flex gap-4 items-start bg-[#1a0d0d] border border-[#e84545]/30 rounded-2xl p-5">
@@ -193,7 +309,6 @@
       <h2 style="font-family:'Syne',sans-serif;" class="font-bold text-2xl text-[#edf0f8] mb-5">Report to Urgent Customer Alert in Teams</h2>
 
       <div class="bg-[#161921] border border-[#1e2230] rounded-2xl overflow-hidden shadow-xl shadow-black/30">
-        <!-- toolbar -->
         <div class="flex items-center justify-between px-5 py-3 border-b border-[#1e2230] bg-[#111318]">
           <div class="flex items-center gap-2">
             <span class="w-2.5 h-2.5 rounded-full bg-[#e84545]/60"></span>
@@ -210,7 +325,6 @@
           </button>
         </div>
 
-        <!-- Message body -->
         <div id="copyBody" class="px-6 py-6 text-sm font-mono text-[#c8d0e0] leading-7 whitespace-pre-wrap"><span class="inline-block bg-[#e84545] text-white font-bold px-3 py-0.5 rounded text-sm tracking-wider">【URGENT】</span>
 Hi Everyone,
 
@@ -254,11 +368,8 @@ Overview: Swati confirmed that the new config files now return the correct categ
                 <p style="font-family:'Syne',sans-serif;" class="font-semibold text-[#edf0f8] text-sm mb-1">Open the text editor</p>
                 <p class="text-[#8892a8] text-sm">Click the <strong class="text-[#c8d0e0]">pencil ✏️ icon</strong> at the bottom-right corner of the editor to enter edit mode.</p>
               </div>
-              <!-- Screenshot 1 -->
               <div class="step-screenshot mt-3" onclick="openLightbox(0)">
-                <img src="1.png"
-                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
-                  alt="Step 1 — Pencil icon" />
+                <img src="1.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" alt="Step 1 — Pencil icon" />
                 <div class="img-placeholder">
                   <svg class="w-7 h-7 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2" stroke-width="1.5"/><path d="M3 9l4-4 4 4 5-5 5 5" stroke-width="1.5"/></svg>
                   1.png not found
@@ -276,11 +387,8 @@ Overview: Swati confirmed that the new config files now return the correct categ
                 <p style="font-family:'Syne',sans-serif;" class="font-semibold text-[#edf0f8] text-sm mb-1">Select the 【URGENT】 text</p>
                 <p class="text-[#8892a8] text-sm">Click and drag to highlight only the <span class="bg-[#e84545] text-white font-bold font-mono px-1.5 py-0.5 rounded text-xs mx-0.5">【URGENT】</span> tag at the very start of the message.</p>
               </div>
-              <!-- Screenshot 2 -->
               <div class="step-screenshot mt-3" onclick="openLightbox(1)">
-                <img src="2.png"
-                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
-                  alt="Step 2 — Select URGENT" />
+                <img src="2.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" alt="Step 2 — Select URGENT" />
                 <div class="img-placeholder">
                   <svg class="w-7 h-7 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2" stroke-width="1.5"/><path d="M3 9l4-4 4 4 5-5 5 5" stroke-width="1.5"/></svg>
                   2.png not found
@@ -298,11 +406,8 @@ Overview: Swati confirmed that the new config files now return the correct categ
                 <p style="font-family:'Syne',sans-serif;" class="font-semibold text-[#edf0f8] text-sm mb-1">Click the Highlight icon</p>
                 <p class="text-[#8892a8] text-sm">In the formatting toolbar, find the <strong class="text-[#c8d0e0]">Highlight / Background Colour</strong> icon (marker or paint bucket).</p>
               </div>
-              <!-- Screenshot 3 -->
               <div class="step-screenshot mt-3" onclick="openLightbox(2)">
-                <img src="3.png"
-                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
-                  alt="Step 3 — Highlight icon" />
+                <img src="3.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" alt="Step 3 — Highlight icon" />
                 <div class="img-placeholder">
                   <svg class="w-7 h-7 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2" stroke-width="1.5"/><path d="M3 9l4-4 4 4 5-5 5 5" stroke-width="1.5"/></svg>
                   3.png not found
@@ -320,11 +425,8 @@ Overview: Swati confirmed that the new config files now return the correct categ
                 <p style="font-family:'Syne',sans-serif;" class="font-semibold text-[#e84545] text-sm mb-1">Choose Red from the colour palette</p>
                 <p class="text-[#8892a8] text-sm">Select <strong class="text-[#e84545]">Red</strong> from the picker. The 【URGENT】 tag will immediately get a red background — making it instantly noticeable.</p>
               </div>
-              <!-- Screenshot 4 -->
               <div class="step-screenshot step-screenshot-red mt-3" onclick="openLightbox(3)">
-                <img src="4.png"
-                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'"
-                  alt="Step 4 — Choose Red" />
+                <img src="4.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'" alt="Step 4 — Choose Red" />
                 <div class="img-placeholder">
                   <svg class="w-7 h-7 opacity-30" fill="none" viewBox="0 0 24 24" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2" stroke-width="1.5"/><path d="M3 9l4-4 4 4 5-5 5 5" stroke-width="1.5"/></svg>
                   4.png not found
@@ -337,8 +439,6 @@ Overview: Swati confirmed that the new config files now return the correct categ
         </ol>
       </div>
     </section>
-
-
 
   </main>
 
